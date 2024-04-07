@@ -1,1 +1,1 @@
-UPDATE TABLE "User" SET verified = true WHERE user_id = $1;
+UPDATE "User" SET verified = true WHERE email = $1;

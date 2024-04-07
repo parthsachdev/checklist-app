@@ -3,6 +3,7 @@ import {router} from './src/router';
 import * as postgres from './src/postgres';
 import { NextFunction, Request, Response } from "express";
 import config from 'config';
+import path from 'path';
 
 const app: Express = express();
 
@@ -12,6 +13,24 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 	console.log(`Request received for ${req.method} ${req.url}`);
 	next();
 });
+app.use(express.static('ui'));
+
+// uiPages
+app.use('/app', (req: Request, res: Response, next: NextFunction) => {
+	const action = req.originalUrl.split('/').at(2) ?? '404';
+	req.action = action;
+	const allowedRoutes = ['404', 'login', 'verifyEmail', 'categories', 'register'];
+	if (!allowedRoutes.includes(action)) {
+		return res.redirect('/');
+	}
+	const htmlPage = action?.concat('.html');
+	try {
+		return res.status(200).sendFile(path.join(process.cwd(), 'ui', htmlPage ?? '404.html'));
+	} catch (err) {
+		next(err);
+	}
+});
+
 app.use('/', router);
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {

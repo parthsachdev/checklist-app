@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Verify your email</title>
+	</head>
+	<body>
+		<h1>Verify your email</h1>
+		<h6>Enter the 8 digit code you have received on your email</h6>
+		<form id="verifyEmailForm" onsubmit="verifyEmail(event)">
+			<input type="number" name="otp" id="otp" minlength="8" maxlength="8" required />
+			<button type="submit">Verify</button>
+		</form>
+		<script src="/verifyEmail.js" defer></script>
+	</body>
+</html>

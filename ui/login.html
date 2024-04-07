@@ -8,40 +8,12 @@
 	<div class="login">
 		<h1>Turnover Checklist</h1>
 		<form action="/login" method="post" id="loginForm">
-			<input type="text" name="email" placeholder="Email" required="required" />
-			<input type="password" name="password" placeholder="Password" required="required" />
+			<input type="text" name="email" placeholder="Email" required />
+			<input type="password" name="password" placeholder="Password" required />
 			<button type="submit">Login</button>
 		</form>
 	</div>
 
-	<script>
-		document.getElementById('loginForm').onsubmit = function (event) {
-			event.preventDefault();
-			var email = document.querySelector('input[name="email"]').value;
-			var password = document.querySelector('input[name="password"]').value;
-			fetch('/login', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					email, password
-				})
-			}).then(function (response) {
-				if (response.status === 200) {
-					return response.json();
-				} else {
-					alert('Login failed. Please try again.');
-					throw new Error('Login failed');
-				}
-			}).then(function (data) {
-				localStorage.setItem('token', data.token);
-				window.location = '/app/categories';
-			}).catch(function (error) {
-				console.error('Error:', error);
-			});
-		}
-
-	</script>
+	<script src="/login.js" defer> </script>
 
 </html>

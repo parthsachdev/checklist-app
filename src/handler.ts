@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { getClient, queries } from "./postgres";
+import { getClient, getTotalCategories, queries } from "./postgres";
 
 import * as utils from "./utils";
 import format from 'pg-format';
+
+const CATEGORIES_PAGE_LIMIT = 6;
 
 export async function login(req: Request, res: Response, next: NextFunction) {
 	req.action = 'login';
@@ -14,15 +16,12 @@ export async function login(req: Request, res: Response, next: NextFunction) {
 		}
 
 		const client = getClient();
-
 		const response = await client.query(queries['get_user_details'], [email]);
-
 		if (response.rows.length !== 1) {
 			return res.status(401).json({message: 'Invalid username or password'});
 		}
 
 		const user = response.rows[0];
-
 		if (!user.verified) {
 			return res.status(403).json({message: 'Email not verified'});
 		}
@@ -45,19 +44,17 @@ export async function login(req: Request, res: Response, next: NextFunction) {
 export async function register(req: Request, res: Response, next: NextFunction) {
 	req.action = 'register';
 	try {
-		const {name, email, password}: {name: string, email: string, password: string} = req.body;
+		const {username, email, password}: {username: string, email: string, password: string} = req.body;
 
-		if (!name || !email || !password) {
+		if (!username || !email || !password) {
 			return res.status(400).send('Invalid input');
 		}
 
 		const client = getClient();
-
 		const passhash = utils.hashPassword(password);
+		const obj = await client.query(queries['register_user'], [email, passhash, username]);
 
-		const obj = await client.query(queries['register_user'], [email, passhash, name]);
-
-		return res.status(201).json({message: 'OTP sent to mail successfully'});
+		return res.status(200).json({message: 'OTP sent to mail successfully'});
 
 	} catch (err) {
 		next(err);
@@ -68,12 +65,11 @@ export async function register(req: Request, res: Response, next: NextFunction) 
 export async function verifyEmail(req: Request, res: Response, next: NextFunction) {
 	req.action = 'verifyEmail';
 	try {
-		const {code} = req.body;
+		const {email, code} = req.body;
 		const client = getClient();
-		const user = req.user;
 		if (utils.verifyOTP(code)) {
-			await client.query(queries['verify_user'], [`${user?.user_id}`]);
-			return res.status(200).json({'message': 'Email verified successfully'});
+			await client.query(queries['verify_user'], [`${email}`]);
+			return res.status(201).json({'message': 'Email verified successfully'});
 		} else {
 			return res.status(401).json({'message': 'Invalid OTP'});
 		}
@@ -88,8 +84,12 @@ export async function getCategories(req: Request, res: Response, next: NextFunct
 	try {
 		const client = getClient();
 		const user = req.user;
-		const response = await client.query(queries['get_categories_for_user'], [`${user?.user_id}`]);
-		return res.status(200).json({message: 'Categories', data: response.rows});
+		const { pageNumber = 1} = req.query;
+		const totalPages = Math.ceil(getTotalCategories() / CATEGORIES_PAGE_LIMIT);
+		const offset = (+pageNumber-1)*CATEGORIES_PAGE_LIMIT;
+
+		const response = await client.query(queries['get_categories_for_user'], [`${user?.user_id}`, `${CATEGORIES_PAGE_LIMIT}`, `${offset}`]);
+		return res.status(200).json({message: 'Categories', data: response.rows,  totalPages});
 	} catch (err) {
 		next(err);
 	}

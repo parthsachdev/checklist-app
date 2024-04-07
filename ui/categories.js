@@ -1,66 +1,88 @@
-// get token from local storage
-document.addEventListener('DOMContentLoaded', () => {
-	var token = localStorage.getItem('token');
-	if (!token) {
-		window.location = '/app/login';
-	}
-
+function putCategories (token) {
+	const allCheckedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
+	const checkedCategories = Array.from(allCheckedBoxes).map(checkbox => checkbox.value);
 	fetch('/categories', {
+		method: 'PUT',
+		headers: {
+			'Authorization': 'Bearer ' + token,
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			checkList: checkedCategories
+		})
+	}).then((response) => {
+		if (response.status === 200) {
+			alert('Categories updated');
+		} else {
+			alert('error updating categories');
+			throw new Error('error');
+		}
+	}).catch(console.error);
+}
+
+async function getCategories(pageNumber, token) {
+	fetch(`/categories?pageNumber=${pageNumber}`, {
 		method: 'GET',
 		headers: {
 			'Authorization': 'Bearer ' + token
 		},
-	}).then(function (response) {
+	}).then((response) => {
 		if (response.status === 200) {
 			return response.json();
 		} else {
 			alert('error fetching categories');
 			throw new Error('error');
 		}
-	}).then(function (data){
-		const categories = data.data;
-		const categoryForm = document.getElementById('categoryForm')
-		categoryForm.innerHTML = categories.map(function (category) {
-			const inputHTML =  `<input type="checkbox" id="${category.category_name}" name="${category.category_name}" value="${category.category_id}" ${category.checked ? 'checked': ''} />`;
-			const labelHTML = ` <label for="${category.category_name}">${category.category_name}</label>`;
-			return inputHTML.concat(labelHTML);
-		}).join(' ').concat('');
-
-		const submitButton = document.createElement('button');
-		// submitButton.id = 'submitButton';
-		submitButton.setAttribute('type', 'submit');
-		submitButton.setAttribute('id', 'submitButton');
-		submitButton.textContent = 'Submit';
-		categoryForm.appendChild(submitButton);
-		submitButton.onsubmit = function (event) {
+	}).then((data) => {
+		const submitButton = document.getElementById('submitButton');
+		submitButton.onclick = (event) => {
 			event.preventDefault();
-			const checkedCategories = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(function (checkbox) {
-				return checkbox.value;
-			});
-			console.log({checkedCategories});
-			fetch('/categories', {
-				method: 'PUT',
-				headers: {
-					'Authorization': 'Bearer ' + token,
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					checkList: checkedCategories
-				})
-			}).then(function (response) {
-				if (response.status === 200) {
-					alert('Categories updated');
-				} else {
-					alert('error updating categories');
-					throw new Error('error');
-				}
-			}).catch(function (error) {
-				console.error('Error:', error);
-			});
+			putCategories(token);
 		}
-		}).catch(function (error) {
-			console.error('Error:', error);
-		});
 
+		const categoryForm = document.getElementById('categoryForm');
+		Array.from(categoryForm.children).forEach((child) => categoryForm.removeChild(child));
 
+		const categories = data.data;
+		categories.map(category => {
+
+			const inputEle = document.createElement('input');
+			inputEle.type = 'checkbox';
+			inputEle.id = category.category_name;
+			inputEle.name = category.category_name;
+			inputEle.value = category.category_id;
+			inputEle.checked = category.checked;
+
+			const labelEle = document.createElement('label');
+			labelEle.setAttribute('for', category.category_name);
+			labelEle.innerText = category.category_name;
+
+			return [inputEle, labelEle, document.createElement('br')];
+		})
+		.flat(1)
+		// .forEach(ele => categoryForm.insertBefore(ele, submitButton));
+		.forEach(ele => categoryForm.appendChild(ele));
+
+		const totalPages = +data.totalPages;
+		const paginationList = document.getElementById('paginationList');
+		for (let i=1; i<=totalPages; i++) {
+			const pageBtn = document.createElement('li');
+			pageBtn.innerHTML = `${i}`;
+			pageBtn.style = 'list-style-type: none; display: inline; margin-right: 10px; color: blue; text-decoration: underline; cursor: pointer';
+			paginationList.appendChild(pageBtn);
+			pageBtn.addEventListener('click', (event) => getCategories(i, token));
+		}
+
+	}).catch(console.error);
+
+}
+
+// get token from local storage
+document.addEventListener('DOMContentLoaded', () => {
+	const token = localStorage.getItem('token');
+	if (!token) {
+		window.location = '/app/login';
+	}
+
+	getCategories(1, token);
 });
