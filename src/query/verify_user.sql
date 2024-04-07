@@ -1,0 +1,1 @@
+UPDATE TABLE "User" SET verified = true WHERE user_id = $1;

@@ -1,0 +1,22 @@
+{
+	"postgres": {
+		"user": "postgres",
+		"host": "34.93.162.217",
+		"database": "checklistdb",
+		"password": "passwd-123",
+		"port": 5432,
+		"ssl": false
+	},
+	"server": {
+		"port": 8000
+	},
+	"auth": {
+		"salt": "secret-salt",
+		"iterations": 1000,
+		"keylen": 64,
+		"digest": "sha512",
+		"jwtSecret": "jwt-secret",
+		"jwtExpiry": "365d",
+		"otp": "12345678"
+	}
+}

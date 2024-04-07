@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS "Category" (
+	category_id SERIAL PRIMARY KEY,
+	category_name VARCHAR(100) UNIQUE NOT NULL,
+	created_at TIMESTAMP DEFAULT NULL
+);
+
+ALTER TABLE "Category" ALTER COLUMN created_at SET DEFAULT NOW();
