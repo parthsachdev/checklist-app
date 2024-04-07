@@ -60,17 +60,18 @@ async function getCategories(pageNumber, token) {
 			return [inputEle, labelEle, document.createElement('br')];
 		})
 		.flat(1)
-		// .forEach(ele => categoryForm.insertBefore(ele, submitButton));
 		.forEach(ele => categoryForm.appendChild(ele));
 
 		const totalPages = +data.totalPages;
 		const paginationList = document.getElementById('paginationList');
-		for (let i=1; i<=totalPages; i++) {
-			const pageBtn = document.createElement('li');
-			pageBtn.innerHTML = `${i}`;
-			pageBtn.style = 'list-style-type: none; display: inline; margin-right: 10px; color: blue; text-decoration: underline; cursor: pointer';
-			paginationList.appendChild(pageBtn);
-			pageBtn.addEventListener('click', (event) => getCategories(i, token));
+		if (paginationList.children.length === 0) {
+			for (let i=1; i<=totalPages; i++) {
+				const pageBtn = document.createElement('li');
+				pageBtn.innerHTML = `${i}`;
+				pageBtn.style = 'list-style-type: none; display: inline; margin-right: 10px; color: blue; text-decoration: underline; cursor: pointer';
+				paginationList.appendChild(pageBtn);
+				pageBtn.addEventListener('click', (event) => getCategories(i, token));
+			}
 		}
 
 	}).catch(console.error);
