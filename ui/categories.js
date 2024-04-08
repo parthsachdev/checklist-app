@@ -69,6 +69,7 @@ async function getCategories(pageNumber, token) {
 		if (paginationList.children.length === 0) {
 			for (let i=1; i<=totalPages; i++) {
 				const pageBtn = document.createElement('li');
+				pageBtn.id = `page-${i}`;
 				pageBtn.innerHTML = `${i}`;
 				pageBtn.style = 'list-style-type: none; display: inline; margin-right: 10px; color: blue; text-decoration: underline; cursor: pointer';
 				paginationList.appendChild(pageBtn);

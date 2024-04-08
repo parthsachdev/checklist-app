@@ -5,6 +5,7 @@ Live running app: http://34.93.90.99
 # Instructions to use the app:
 1. When registering, the OTP is hardcoded: it is 12345678
 1. Already registered account: email: `mail@turnover.com`, password: `password-123`
+1. On every page that you modify the checklist hit the submit button and then go to the next page.
 
 
 # Some details about the project
