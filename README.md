@@ -1,6 +1,6 @@
 # Checklist app
 
-Live running app: 34.93.90.99
+Live running app: http://34.93.90.99
 
 # Instructions to use the app:
 1. When registering, the OTP is hardcoded: it is 12345678
