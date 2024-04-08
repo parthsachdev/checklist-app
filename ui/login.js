@@ -1,3 +1,10 @@
+document.addEventListener('DOMContentLoaded', (ev) => {
+	const token = localStorage.getItem('token');
+	if (token) {
+		window.location = '/app/categories';
+	}
+});
+
 document.getElementById('loginForm').onsubmit = function (event) {
 	event.preventDefault();
 	const email = document.querySelector('input[name="email"]').value;

@@ -1,14 +1,3 @@
+
 INSERT INTO "Category"(category_name)
-VALUES ('Car'),
-('Home'),
-('Work'),
-('Personal'),
-('Health'),
-('Finance'),
-('Education'),
-('Entertainment'),
-('Travel'),
-('Shopping'),
-('Food'),
-('Other')
-RETURNING *;
+VALUES ('Moldova'),('Saudi Arabia'),('Chad'),('Estonia'),('Armenia'),('Mauritius'),('Peru'),('Saint Kitts and Nevis'),('San Marino'),('Bhutan'),('Russian Federation'),('Comoros'),('Dominica'),('Zambia'),('Turks and Caicos Islands'),('Papua New Guinea'),('Norway'),('Thailand'),('Serbia'),('Central African Republic'),('Northern Mariana Islands'),('Cameroon'),('Austria'),('Madagascar'),('Ireland'),('Honduras'),('Pakistan'),('Czechia'),('France'),('United States Minor Outlying Islands'),('Indonesia'),('Tanzania'),('Qatar'),('Egypt'),('Isle of Man'),('Rwanda'),('Italy'),('Mozambique'),('Norfolk Island'),('Saint Martin'),('Bulgaria'),('Andorra'),('Togo'),('Luxembourg'),('Germany'),('Tajikistan'),('Saint Barthelemy'),('Netherlands'),('Monaco'),('India'),('Ecuador'),('Sint Maarten'),('Christmas Island'),('Jordan'),('Afghanistan'),('Antigua and Barbuda'),('Maldives'),('China'),('Iraq'),('Gabon'),('Finland'),('Gibraltar'),('Malawi'),('Bouvet Island'),('Sierra Leone'),('Paraguay'),('Pitcairn Islands'),('French Polynesia'),('Uzbekistan'),('Niger'),('Lithuania'),('Malta'),('Israel'),('Cayman Islands'),('Belarus'),('Grenada'),('Antarctica'),('Holy See (Vatican City State)'),('Cyprus'),('Slovakia'),('Vietnam'),('United Kingdom'),('Sao Tome and Principe'),('Mauritania'),('Nepal'),('Poland'),('Bermuda');

@@ -4,7 +4,7 @@ import { getClient, getTotalCategories, queries } from "./postgres";
 import * as utils from "./utils";
 import format from 'pg-format';
 
-const CATEGORIES_PAGE_LIMIT = 6;
+const CATEGORIES_PAGE_LIMIT = 10;
 
 export async function login(req: Request, res: Response, next: NextFunction) {
 	req.action = 'login';
@@ -98,10 +98,11 @@ export async function getCategories(req: Request, res: Response, next: NextFunct
 export async function updateCheckList(req: Request, res: Response, next: NextFunction) {
 	req.action = 'updateCheckList';
 	try {
-		const {checkList} = req.body;
+		const {checkList, existingList} = req.body;
 		const client = getClient();
 		const user = req.user;
-		await client.query(queries['delete_checklist_for_user'], [`${user?.user_id}`]);
+		const deleteSQL = format(queries['delete_checklist_for_user'], `${user?.user_id}`, existingList.join(','));
+		await client.query(deleteSQL);
 		const result = await client.query(format(queries['update_checklist_for_user'], checkList.map((item: number) => [user?.user_id, item])));
 		return res.status(200).json({message: 'Checklist updated successfully', data: result.rows});
 	} catch (err) {

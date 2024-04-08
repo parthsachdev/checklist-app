@@ -14,6 +14,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 	next();
 });
 app.use(express.static('ui'));
+app.use('/', router);
 
 // uiPages
 app.use('/app', (req: Request, res: Response, next: NextFunction) => {
@@ -31,7 +32,6 @@ app.use('/app', (req: Request, res: Response, next: NextFunction) => {
 	}
 });
 
-app.use('/', router);
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 	console.error(`Error occurred on action ${req.action}. Error: ${err}`);

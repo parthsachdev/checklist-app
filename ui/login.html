@@ -3,15 +3,16 @@
 <head>
 		<title>Turnover Login</title>
 </head>
-<!-- add a body with login page -->
-<body>
-	<div class="login">
 		<h1>Turnover Checklist</h1>
 		<form action="/login" method="post" id="loginForm">
 			<input type="text" name="email" placeholder="Email" required />
 			<input type="password" name="password" placeholder="Password" required />
 			<button type="submit">Login</button>
 		</form>
+	</div>
+
+	<div>
+		<h5>Don't have an account? Register <a href="/app/register">here</a></h5>
 	</div>
 
 	<script src="/login.js" defer> </script>

@@ -1,4 +1,5 @@
 function putCategories (token) {
+	const allBoxes = document.querySelectorAll('input[type="checkbox"]');
 	const allCheckedBoxes = document.querySelectorAll('input[type="checkbox"]:checked');
 	const checkedCategories = Array.from(allCheckedBoxes).map(checkbox => checkbox.value);
 	fetch('/categories', {
@@ -8,7 +9,8 @@ function putCategories (token) {
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({
-			checkList: checkedCategories
+			checkList: checkedCategories,
+			existingList: Array.from(allBoxes).map(checkbox => checkbox.value)
 		})
 	}).then((response) => {
 		if (response.status === 200) {

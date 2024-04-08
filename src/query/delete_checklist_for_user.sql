@@ -1,2 +1,2 @@
 DELETE FROM "UserCategory"
-WHERE "user_id" = $1;
+WHERE "user_id" = %s AND "category_id" = ANY('{%s}');
